@@ -9,8 +9,8 @@ import java.io.FileNotFoundException;
 
 public class CoppyApplication {
     public static void main(String args[]) throws FileNotFoundException, InterruptedException {
-        String srcFile = "path_source_file";
-        String destFile = "path_dest_file";
+        String srcFile = args[0];
+        String destFile = args[1];
 
         int buffersPoolSize = 50;
         int bufferSize = 1024*4;

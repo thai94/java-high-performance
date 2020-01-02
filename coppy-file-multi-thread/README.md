@@ -18,3 +18,8 @@ There are two threads.
 - FileCopyReader: An instance of this class (which is a subclass of Thread) will read blocks from a file one at a time and write them to a BufferQueue that is shared with an instance of FileCopyWriter. A Pool is also shared between an instance of this class and an instance of FileCopyWriter.
 
 - FileCopyWriter: An instance of this class (which is a subclass of Thread) will read blocks from a BufferQueue instance and write them to the destination file. It is this class that is actually responsible for doing the final copying.
+
+## How to run
+
+- mvn package
+- java ./target/coppy-file-multi-thread-1.0-SNAPSHOT.jar <path_to_source_file> <path_to_dest_file>
