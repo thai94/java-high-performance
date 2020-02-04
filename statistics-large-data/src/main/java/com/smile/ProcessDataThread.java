@@ -13,29 +13,29 @@ public class ProcessDataThread extends Thread {
     public void run() {
         try {
             List<IbftTransaction> data = DataReadQueue.getInstance().pool();
-            if(data == null || data.size() == 0) {
+            if (data == null || data.size() == 0) {
                 return;
             }
 
             Map<Integer, StatisticsIbft> statisticsIbft = new HashMap<>();
             int size = data.size();
-            IbftTransaction tran = null;
-            StatisticsIbft ibftSts = null;
-            for (int i = 0; i< size; i++) {
-                tran = data.get(i);
-                if(statisticsIbft.containsKey(tran.userId)) {
-                    ibftSts = statisticsIbft.get(tran.userId);
+            IbftTransaction processingTran = null;
+            StatisticsIbft tmpIbftSts = null;
+            for (int i = 0; i < size; i++) {
+                processingTran = data.get(i);
+                if (statisticsIbft.containsKey(processingTran.userId)) {
+                    tmpIbftSts = statisticsIbft.get(processingTran.userId);
                 }
-                ibftSts = new StatisticsIbft();
-                ibftSts.total += 1;
-                ibftSts.totalSucess += tran.status;
-                ibftSts.totalAmount += tran.amount;
+                tmpIbftSts = new StatisticsIbft();
+                tmpIbftSts.total += 1;
+                tmpIbftSts.totalSucess += processingTran.status;
+                tmpIbftSts.totalAmount += processingTran.amount;
             }
 
             StatisticQueue queue = StatisticQueue.getInstance();
             queue.push(statisticsIbft);
-            Lock lock = Lock.getInstance();
-            lock.increaseStatisticThreadFinsh();
+            WriteLock writeLock = WriteLock.getInstance();
+            writeLock.increaseStatisticThreadFinsh();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

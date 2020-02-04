@@ -6,7 +6,7 @@ public class DummyMain {
     public static void main(String args[]) {
         int start = 0;
         int end = 0;
-        for(int i = 1; i <= POOL_THREAD_SIZE; i++) {
+        for (int i = 1; i <= POOL_THREAD_SIZE; i++) {
             start = end + 1;
             end = i * 1000000;
             GenIbftTransaction genIbftTransaction = new GenIbftTransaction(start, end);

@@ -10,14 +10,15 @@ public class ThreadPool {
     public synchronized void add(Thread thread) {
         pool.add(thread);
     }
+
     public void execute() {
-        if(pool.size() == 0) {
+        if (pool.size() == 0) {
             return;
         }
 
         int size = 0;
         Thread thread = null;
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             thread = pool.get(i);
             thread.start();
         }

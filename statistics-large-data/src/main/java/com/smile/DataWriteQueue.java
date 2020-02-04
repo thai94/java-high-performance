@@ -6,19 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataWriteQueue {
-
-    List<StatisticsIbft> data = new ArrayList<>();
-
     private static DataWriteQueue instance = new DataWriteQueue();
+    private int size = 0;
+    private int count = 0;
+    private List<StatisticsIbft> data = new ArrayList<>();
 
-    private DataWriteQueue() {}
+    private DataWriteQueue() {
+    }
 
     public static DataWriteQueue getInstance() {
         return instance;
     }
 
     public synchronized StatisticsIbft pool() throws InterruptedException {
-        if(data.size() == 0) {
+        if (data.size() == 0) {
             wait();
         }
 
@@ -29,9 +30,31 @@ public class DataWriteQueue {
 
     public synchronized void push(StatisticsIbft msg) {
         data.add(msg);
+        count++;
         if (data.size() == 1) {
             notify();
         }
     }
 
+    public synchronized int getSize() throws InterruptedException {
+        if (size == 0) {
+            wait();
+        }
+        return size;
+    }
+
+    public synchronized void setSize(int size) {
+        if (size == 0) {
+            notify();
+        }
+        this.size = size;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public int getPoolSize() {
+        return this.data.size();
+    }
 }

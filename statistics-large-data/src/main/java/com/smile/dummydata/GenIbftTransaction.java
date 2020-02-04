@@ -1,12 +1,9 @@
 package com.smile.dummydata;
 
-import entity.IbftTransaction;
 import mysql.ConnectionPool;
 import utils.StopWatch;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 public class GenIbftTransaction extends Thread {
@@ -38,12 +35,12 @@ public class GenIbftTransaction extends Thread {
 
             StringBuilder builder = new StringBuilder();
             String sql = "";
-            for(int i = startTranId; i <= endTranId; i++) {
+            for (int i = startTranId; i <= endTranId; i++) {
                 builder.append(String.format(INSERT_VALUE, i, i % MAX_USER, i % MAX_AMOUNT, 1));
                 builder.append(",");
-                if(i % BATCH_SIZE == 0) {
+                if (i % BATCH_SIZE == 0) {
                     sql = INSERT_SQL + builder.toString();
-                    sql = sql.substring(0, sql.length() -1);
+                    sql = sql.substring(0, sql.length() - 1);
                     stm.executeUpdate(sql);
                     builder = new StringBuilder();
                 }

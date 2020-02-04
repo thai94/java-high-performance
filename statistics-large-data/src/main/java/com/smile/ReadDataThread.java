@@ -17,13 +17,21 @@ public class ReadDataThread extends Thread {
     int offset = 0;
     int pageSize = 0;
 
-    public  ReadDataThread(int offset, int pageSize) {
+    private ReadDataThread() {
+    }
+
+    public ReadDataThread(int offset, int pageSize) {
         this.offset = offset;
         this.pageSize = pageSize;
     }
 
     @Override
     public void run() {
+
+        if (offset == 0 && pageSize == 0) {
+            return;
+        }
+
         StopWatch sw = new StopWatch();
         sw.start();
         ConnectionPool pool = null;
@@ -47,8 +55,9 @@ public class ReadDataThread extends Thread {
             }
 
             DataReadQueue.getInstance().push(data);
-            Lock lock = Lock.getInstance();
-            lock.increaseReadThreadFinsh();
+
+            WriteLock writeLock = WriteLock.getInstance();
+            writeLock.increaseReadThreadFinsh();
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {

@@ -8,22 +8,21 @@ import java.util.List;
 public class DataReadQueue {
 
     private static final int MAX_SIZE = 100;
-
+    private static DataReadQueue queue = new DataReadQueue();
     private List<List<IbftTransaction>> data = new ArrayList<>();
 
-    private DataReadQueue() {}
+    private DataReadQueue() {
+    }
 
-    private static DataReadQueue queue = new DataReadQueue();
-
-    public synchronized static DataReadQueue getInstance() {
+    public static DataReadQueue getInstance() {
         return queue;
     }
 
     public synchronized List<IbftTransaction> pool() throws InterruptedException {
-        if(data.isEmpty()) {
+        if (data.isEmpty()) {
             wait();
         }
-        if(data.size() == MAX_SIZE) {
+        if (data.size() == MAX_SIZE) {
             notify();
         }
         List<IbftTransaction> ret = data.get(data.size() - 1);
@@ -32,10 +31,10 @@ public class DataReadQueue {
     }
 
     public synchronized void push(List<IbftTransaction> data) throws InterruptedException {
-        while(data.size() >= MAX_SIZE) {
+        while (data.size() >= MAX_SIZE) {
             wait();
         }
-        if(this.data.isEmpty()) {
+        if (this.data.isEmpty()) {
             notify();
         }
         this.data.add(data);

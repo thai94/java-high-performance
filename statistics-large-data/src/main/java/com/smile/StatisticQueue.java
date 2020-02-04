@@ -8,11 +8,11 @@ import java.util.Map;
 
 public class StatisticQueue {
 
+    private static StatisticQueue instance = new StatisticQueue();
     List<Map<Integer, StatisticsIbft>> pool = new ArrayList<>();
 
-    private static StatisticQueue instance = new StatisticQueue();
-
-    private StatisticQueue() {}
+    private StatisticQueue() {
+    }
 
     public static StatisticQueue getInstance() {
         return instance;
@@ -23,10 +23,10 @@ public class StatisticQueue {
     }
 
     public synchronized List<Map<Integer, StatisticsIbft>> pool() throws InterruptedException {
-        Lock lock = Lock.getInstance();
-        if(!lock.isReadFinish() || !lock.isStatictisFinish()) {
+        WriteLock writeLock = WriteLock.getInstance();
+        if (!writeLock.isReadFinish() || !writeLock.isStatictisFinish()) {
             wait();
         }
-        return  this.pool;
+        return this.pool;
     }
 }
