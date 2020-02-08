@@ -1,4 +1,4 @@
-package com.smile;
+package com.smile.process;
 
 import entity.StatisticsIbft;
 
@@ -19,12 +19,14 @@ public class StatisticQueue {
     }
 
     public synchronized void push(Map<Integer, StatisticsIbft> msg) {
+        if (pool.isEmpty()) {
+            notify();
+        }
         pool.add(msg);
     }
 
     public synchronized List<Map<Integer, StatisticsIbft>> pool() throws InterruptedException {
-        WriteLock writeLock = WriteLock.getInstance();
-        if (!writeLock.isReadFinish() || !writeLock.isStatictisFinish()) {
+        if (pool.isEmpty()) {
             wait();
         }
         return this.pool;

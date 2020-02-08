@@ -1,7 +1,9 @@
-package com.smile;
+package com.smile.read;
 
+import com.smile.write.WriteLock;
 import entity.IbftTransaction;
-import mysql.ConnectionPool;
+import pool.ConnectionPool;
+import utils.Log;
 import utils.StopWatch;
 
 import java.sql.Connection;
@@ -12,7 +14,7 @@ import java.util.List;
 
 public class ReadDataThread extends Thread {
 
-    private final String QUERY_SQL = "SELECT * FROM statistics_large_data.ibft_transaction LIMIT %s,%s;";
+    private final String QUERY_SQL = "SELECT * FROM ibft_transaction LIMIT %s,%s;";
 
     int offset = 0;
     int pageSize = 0;
@@ -28,22 +30,31 @@ public class ReadDataThread extends Thread {
     @Override
     public void run() {
 
+        StopWatch sw = new StopWatch();
+        sw.start();
+
+        Log.logStart("READ_DATA", String.format("read from: %s, pageSize: %s", this.offset, this.pageSize));
         if (offset == 0 && pageSize == 0) {
             return;
         }
-
-        StopWatch sw = new StopWatch();
-        sw.start();
         ConnectionPool pool = null;
         Connection conn = null;
-
         try {
             pool = ConnectionPool.getInstance();
             conn = pool.getConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (conn == null) {
+            return;
+        }
+
+        List<IbftTransaction> data = new ArrayList<>();
+        try {
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery(String.format(QUERY_SQL, offset, pageSize));
             IbftTransaction ent = null;
-            List<IbftTransaction> data = new ArrayList<>();
             while (rs.next()) {
                 ent = new IbftTransaction();
                 ent.transactionId = rs.getInt(1);
@@ -54,7 +65,8 @@ public class ReadDataThread extends Thread {
                 data.add(ent);
             }
 
-            DataReadQueue.getInstance().push(data);
+            DataReadQueue dataReadQueue = DataReadQueue.getInstance();
+            dataReadQueue.push(data);
 
             WriteLock writeLock = WriteLock.getInstance();
             writeLock.increaseReadThreadFinsh();
@@ -62,7 +74,7 @@ public class ReadDataThread extends Thread {
             ex.printStackTrace();
         } finally {
             pool.releaseConection(conn);
+            Log.infoEnd("READ_DATA", "Size: " + data.size(),sw.end());
         }
-
     }
 }

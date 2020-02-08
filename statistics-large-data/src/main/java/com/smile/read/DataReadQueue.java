@@ -1,4 +1,4 @@
-package com.smile;
+package com.smile.read;
 
 import entity.IbftTransaction;
 
@@ -22,18 +22,13 @@ public class DataReadQueue {
         if (data.isEmpty()) {
             wait();
         }
-        if (data.size() == MAX_SIZE) {
-            notify();
-        }
-        List<IbftTransaction> ret = data.get(data.size() - 1);
-        data.remove(data.size() - 1);
+        int index = data.size() - 1;
+        List<IbftTransaction> ret = data.get(index);
+        data.remove(index);
         return ret;
     }
 
     public synchronized void push(List<IbftTransaction> data) throws InterruptedException {
-        while (data.size() >= MAX_SIZE) {
-            wait();
-        }
         if (this.data.isEmpty()) {
             notify();
         }

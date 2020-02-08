@@ -1,4 +1,4 @@
-package com.smile;
+package pool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class ThreadPool {
             return;
         }
 
-        int size = 0;
+        int size = pool.size();
         Thread thread = null;
         for (int i = 0; i < size; i++) {
             thread = pool.get(i);

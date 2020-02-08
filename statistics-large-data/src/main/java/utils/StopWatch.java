@@ -8,9 +8,9 @@ public class StopWatch {
         start = System.currentTimeMillis();
     }
 
-    public void end() {
+    public long end() {
         end = System.currentTimeMillis();
-        System.out.println(String.format("The %s take time: %s", Thread.currentThread().getName(), (end - start)));
+        return end - start;
     }
 
 

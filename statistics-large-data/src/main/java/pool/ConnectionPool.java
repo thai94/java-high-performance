@@ -1,4 +1,4 @@
-package mysql;
+package pool;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,6 +7,14 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class ConnectionPool {
+    public static final String HOST = "10.0.0.200:3306";
+    public static final String DB_NAME = "statistics_large_data";
+    public static final String USER = "admin";
+    public static final String PASSWORD = "12345678";
+
+    public static final int MAX_CONNECTON_POOL_SIZE = 20;
+
+
     private static ConnectionPool instance;
 
     static {
@@ -19,17 +27,16 @@ public class ConnectionPool {
         }
     }
 
-    int size = 10;
     Queue<Connection> pool = new LinkedList<>();
 
     private ConnectionPool() throws SQLException, ClassNotFoundException {
 
-        Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        String url = String.format("jdbc:mysql://%s/%s", HOST, DB_NAME);
 
         Connection con = null;
-        for (int i = 0; i < size; i++) {
-            con = DriverManager.getConnection(
-                    "jdbc:mysql://10.0.0.213:3306/statistics_large_data", "admin", "");
+        for (int i = 0; i < MAX_CONNECTON_POOL_SIZE; i++) {
+            con = DriverManager.getConnection(url, USER, PASSWORD);
             pool.add(con);
         }
     }
@@ -49,10 +56,10 @@ public class ConnectionPool {
         if (connection == null) {
             return;
         }
-        pool.add(connection);
-        if (pool.size() == 1) {
+        if (pool.size() == 0) {
             notify();
         }
+        pool.add(connection);
     }
 
     public int getRemainConection() {

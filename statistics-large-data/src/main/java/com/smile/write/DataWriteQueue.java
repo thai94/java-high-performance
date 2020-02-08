@@ -1,4 +1,4 @@
-package com.smile;
+package com.smile.write;
 
 import entity.StatisticsIbft;
 
@@ -23,8 +23,9 @@ public class DataWriteQueue {
             wait();
         }
 
-        StatisticsIbft result = data.get(data.size() - 1);
-        data.remove(data.size() - 1);
+        int index = data.size() - 1;
+        StatisticsIbft result = data.get(index);
+        data.remove(index);
         return result;
     }
 

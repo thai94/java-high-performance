@@ -1,4 +1,6 @@
-package com.smile;
+package com.smile.write;
+
+import utils.Log;
 
 /**
  * All write data thread only run when all read data finished and all statictis data thread finished.
@@ -20,10 +22,18 @@ public class WriteLock {
 
     public synchronized void increaseReadThreadFinsh() {
         this.countReadThreadFinsh++;
+        Log.info("READ_DATA", this.countReadThreadFinsh + "/" + sizeReadThread);
+        if (isReadFinish()) {
+            notify();
+        }
     }
 
     public synchronized void increaseStatisticThreadFinsh() {
         this.countStatisticThreadFinsh++;
+        Log.info("PROCESS_DATA", this.countStatisticThreadFinsh + "/" + sizeStatisticThread);
+        if (isStatictisFinish()) {
+            notify();
+        }
     }
 
     public boolean isReadFinish() {
@@ -33,4 +43,13 @@ public class WriteLock {
     public boolean isStatictisFinish() {
         return this.countStatisticThreadFinsh == sizeStatisticThread;
     }
+
+    public synchronized boolean isAbleToStartMergeThead() throws InterruptedException {
+        if (!isReadFinish() || !isStatictisFinish()) {
+            wait();
+        }
+        return true;
+    }
+
+
 }

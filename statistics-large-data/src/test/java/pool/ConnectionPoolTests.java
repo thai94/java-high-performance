@@ -1,4 +1,4 @@
-package mysql;
+package pool;
 
 import org.junit.Assert;
 import org.junit.Test;
