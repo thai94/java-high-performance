@@ -37,7 +37,10 @@ Assumption
   - Seperating the big task into many small task and let's them run parallel will get more fast.
 - Memory
   - Not need to huge memory for storing 100 million rows because it's store in Queue. This queue can be implemented in seperate machine.
-  - Not need to store all read data and processed data in memory by don't need to merge statictis data thread. Moving the logic of merge statictis data into write data thread so you don't need to waiting for all read data thread and proccessing data thread be finished.
+
+## What need to improve
+
+- Not need to store all read data and processed data in memory by don't need to merge statictis data thread. Moving the logic of merge statictis data into write data thread so you don't need to waiting for all read data thread and proccessing data thread be finished.
 
 ## How to run
 
