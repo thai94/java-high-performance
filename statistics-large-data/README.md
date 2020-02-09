@@ -36,8 +36,8 @@ Assumption
 - Performance
   - Seperating the big task into many small task and let's them run parallel will get more fast.
   - MySql Connection pool is initial when the application is startup and given to read thread and write thread when it need so does not take time to create a mysql connection when read/ write data.
-  - In read data thread it settings fetchSize with value 5000 (default is 1). it means the client will read 5000 rows more if the resultSet is large than 10000
-  - In the write data thread instead of inserting one a row i'm inserting 5000 row each times. it will increase the time of inserting many times.
+  - In read data thread it settings fetchSize with value 5000 (default is 1). it means the MySql will send 5000 rows each times to client.
+  - In the write data thread inserting 5000 rows each times. It means the client will send 5000 rows to mysql for inserting each times.
 - Memory
   - Not need to huge memory for storing 100 million rows because it's store in Queue. This queue can be implemented in seperate machine.
 
