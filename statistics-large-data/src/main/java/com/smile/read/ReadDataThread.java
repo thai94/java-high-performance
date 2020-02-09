@@ -65,6 +65,8 @@ public class ReadDataThread extends Thread {
                 data.add(ent);
             }
 
+            rs.close();
+
             DataReadQueue dataReadQueue = DataReadQueue.getInstance();
             dataReadQueue.push(data);
 

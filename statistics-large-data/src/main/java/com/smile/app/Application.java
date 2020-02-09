@@ -19,7 +19,7 @@ import java.util.List;
 
 public class Application {
 
-    private static final int MAX_RECORD_PER_THREAD = 10000;
+    private static final int MAX_RECORD_PER_THREAD = 50000;
     private static final  String COUNT_TRANSACTION_QUERY = "SELECT COUNT(*) FROM statistics_large_data.ibft_transaction";
 
 

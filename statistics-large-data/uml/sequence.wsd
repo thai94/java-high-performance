@@ -1,0 +1,26 @@
+@startuml
+box "Mutiple thread" #LightBlue
+participant ReadThread
+participant ReadQueue
+participant StatictisDataThread
+participant StatictisQueue
+end box
+participant MergeStatictisThread
+box "Mutiple thread" #LightSkyBlue
+participant WriteQueue
+participant WriteThread
+end box
+
+ReadThread -> ReadThread: Read transaction data from database
+ReadThread -> ReadQueue: push the read data to queue
+StatictisDataThread -> ReadQueue: pool data
+StatictisDataThread -> StatictisDataThread: processing data
+StatictisDataThread -> StatictisQueue: push the processed data
+MergeStatictisThread -> MergeStatictisThread: wait until all [StatictisDataThread] finished
+MergeStatictisThread -> StatictisQueue: pool data
+MergeStatictisThread -> MergeStatictisThread: merge all statictis data
+MergeStatictisThread -> WriteQueue: push merged data
+WriteThread -> WriteQueue: pool the merged data
+WriteThread -> WriteThread: write statictis data to queue
+
+@enduml

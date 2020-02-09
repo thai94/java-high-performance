@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cọm.smile</groupId>
+    <groupId>com.smile</groupId>
     <artifactId>statistics-large-data</artifactId>
     <version>1.0-SNAPSHOT</version>
     <properties>
@@ -28,17 +28,17 @@
 
     <build>
         <plugins>
-            <!-- Make this jar executable -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
+                <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <archive>
                         <manifest>
-                            <!-- Jar file entry point -->
-                            <mainClass>app.CoppyApplication</mainClass>
+                            <mainClass>com.smile.app.Application</mainClass>
                         </manifest>
                     </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,6 +1,7 @@
 package com.smile.dummydata;
 
 import pool.ConnectionPool;
+import utils.Log;
 import utils.StopWatch;
 
 import java.sql.Connection;
@@ -8,7 +9,7 @@ import java.sql.Statement;
 
 public class GenerateIbftTransaction extends Thread {
 
-    public static final int MAX_USER = 100;
+    public static final int MAX_USER = 1000000;
     public static final int MAX_AMOUNT = 10000000;
     public final String INSERT_SQL = "INSERT INTO `statistics_large_data`.`ibft_transaction` (`transaction_id`, `user_id`, `amount`, `status`) VALUES ";
     public final String INSERT_VALUE = "(%s, %s, %s, %s)";
@@ -25,7 +26,7 @@ public class GenerateIbftTransaction extends Thread {
     @Override
     public void run() {
 
-        System.out.println(String.format("The %s insert db: from %s to %s", Thread.currentThread().getName(), startTranId, endTranId));
+        Log.logStart("DUMMY_DATA", String.format("From: %s, to: %s", startTranId, endTranId));
 
         StopWatch sw = new StopWatch();
         sw.start();
@@ -69,7 +70,7 @@ public class GenerateIbftTransaction extends Thread {
             e.printStackTrace();
         } finally {
             pool.releaseConection(conn);
-            sw.end();
+            Log.infoEnd("DUMMY_DATA", sw.end());
         }
     }
 }
