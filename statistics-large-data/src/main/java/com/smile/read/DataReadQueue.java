@@ -19,7 +19,7 @@ public class DataReadQueue {
     }
 
     public synchronized List<IbftTransaction> pool() throws InterruptedException {
-        if (data.isEmpty()) {
+        while (data.isEmpty()) {
             wait();
         }
         int index = data.size() - 1;
@@ -29,9 +29,7 @@ public class DataReadQueue {
     }
 
     public synchronized void push(List<IbftTransaction> data) throws InterruptedException {
-        if (this.data.isEmpty()) {
-            notify();
-        }
+        notify();
         this.data.add(data);
     }
 }

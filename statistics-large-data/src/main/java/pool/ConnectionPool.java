@@ -3,7 +3,9 @@ package pool;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class ConnectionPool {
@@ -27,7 +29,7 @@ public class ConnectionPool {
         }
     }
 
-    Queue<Connection> pool = new LinkedList<>();
+    List<Connection> pool = new ArrayList<>();
 
     private ConnectionPool() throws SQLException, ClassNotFoundException {
 
@@ -46,19 +48,21 @@ public class ConnectionPool {
     }
 
     public synchronized Connection getConnection() throws InterruptedException {
-        if (pool.size() == 0) {
+        while (pool.size() == 0) {
             wait();
         }
-        return pool.poll();
+        int index = pool.size() - 1;
+        Connection conn = pool.get(index);
+        pool.remove(index);
+
+        return conn;
     }
 
     public synchronized void releaseConection(Connection connection) {
-        if (connection == null) {
+        if(connection == null) {
             return;
         }
-        if (pool.size() == 0) {
-            notify();
-        }
+        notify();
         pool.add(connection);
     }
 

@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ReadDataThread extends Thread {
 
-    private final String QUERY_SQL = "SELECT * FROM ibft_transaction LIMIT %s,%s;";
+    private final String QUERY_SQL = "SELECT * FROM ibft_transaction WHERE transaction_id >= %s and transaction_id < %s;";
 
     int offset = 0;
     int pageSize = 0;
@@ -54,7 +54,7 @@ public class ReadDataThread extends Thread {
         try {
             Statement stm = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             stm.setFetchSize(10000);
-            ResultSet rs = stm.executeQuery(String.format(QUERY_SQL, offset, pageSize));
+            ResultSet rs = stm.executeQuery(String.format(QUERY_SQL, offset, offset + pageSize));
             IbftTransaction ent = null;
             while (rs.next()) {
                 ent = new IbftTransaction();
@@ -67,7 +67,6 @@ public class ReadDataThread extends Thread {
             }
 
             rs.close();
-
             DataReadQueue dataReadQueue = DataReadQueue.getInstance();
             dataReadQueue.push(data);
 
