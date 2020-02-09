@@ -12,7 +12,7 @@ public class ConnectionPool {
     public static final String USER = "admin";
     public static final String PASSWORD = "12345678";
 
-    public static final int MAX_CONNECTON_POOL_SIZE = 20;
+    public static final int MAX_CONNECTON_POOL_SIZE = 100;
 
 
     private static ConnectionPool instance;

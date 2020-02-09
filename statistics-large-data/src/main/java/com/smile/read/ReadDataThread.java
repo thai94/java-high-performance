@@ -52,7 +52,8 @@ public class ReadDataThread extends Thread {
 
         List<IbftTransaction> data = new ArrayList<>();
         try {
-            Statement stm = conn.createStatement();
+            Statement stm = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            stm.setFetchSize(5000);
             ResultSet rs = stm.executeQuery(String.format(QUERY_SQL, offset, pageSize));
             IbftTransaction ent = null;
             while (rs.next()) {
